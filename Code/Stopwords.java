@@ -22,41 +22,26 @@ public class Stopwords {
 			if(word.isEmpty()) continue;
 			if(isStopWord(word)) continue;
 			result += (word + " ");
-		//	System.out.println(word);
-		//	System.out.println(result);
 		}
 		return result;
 	}
-	
+
 	static void populateHashSet(){
 		stopWordSet = new HashSet<String> (Arrays.asList(stopwordlist));
 	}
 
-/*
-	static void populateStemmedHashSet(){
-		stemmedStopWordSet = stemStringSet(stopWordSet);
-	}
-*/
-
 	public static void main(String[] args){
 
 		ReadFile fileio = new ReadFile();
+		Stemmer stemmer = new Stemmer();
 		stopwordlist = fileio.read();
 		
-		/*
-		for(int i = 0; i < stopwordlist.length; i ++){
-			System.out.println(stopwordlist[i]);
-		}
-		*/
-
 		populateHashSet();
-		//System.out.println(stopWordSet);
-		//populateStemmedHashSet();
-
-		
-		String trial = "this is a trial string, to check if the stop words are getting removed or not. to infinity and beyond";
-		String new_trial = removeStopWords(trial);
-		System.out.println(new_trial);
+				
+		String trial = "this aint is a trial string worried, to check if the stop words are getting removed or not. to infinity and beyond";
+		trial = removeStopWords(trial);
+		trial = trial.replaceAll("[^a-zA-Z\\s]", "").replaceAll("\\s+", " ");
+		System.out.println(trial);
 		
 	}
 
@@ -64,7 +49,7 @@ public class Stopwords {
 
 class ReadFile{
 
-	private static final String FILEPATH = "stopwords.txt";
+	private static final String FILEPATH = "complete_stopWords.txt";
 
 	public String[] read(){
 		
@@ -77,24 +62,14 @@ class ReadFile{
 			br = new BufferedReader(fr);
 
 			String sCurrentLine;
-
-			sCurrentLine = br.readLine();
-			//System.out.println(sCurrentLine);
-			StringTokenizer st = new StringTokenizer(sCurrentLine, ", ");
-			int count = st.countTokens();
-			//System.out.println(count);
-
-			ret = new String[count];
+			ret = new String[41856];
 			int i = 0;
-			while(st.hasMoreTokens()){
-				ret[i] = st.nextToken();
+
+			while((sCurrentLine = br.readLine()) != null){
+				ret[i] = sCurrentLine;
 				i++;
 			}
-
-			for(i = 0; i < count; i ++){
-				ret[i] = ret[i].replace("\"", "");
-				//System.out.println(ret[i]);
-			}			
+			System.out.println(ret.length);
 
 		}catch(IOException e){
 			e.printStackTrace();
@@ -112,5 +87,4 @@ class ReadFile{
 
 		return ret;
 	}
-
 }
