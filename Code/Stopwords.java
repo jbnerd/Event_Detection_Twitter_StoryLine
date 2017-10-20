@@ -9,7 +9,7 @@ public class Stopwords {
 	public static Set<String> stopWordSet = null;
 	private static final String FILEPATH = "complete_stopWords.txt";
 	
-	private static String[] read(){
+	public static String[] read(){
 		
 		BufferedReader br = null;
 		FileReader fr = null;
@@ -70,7 +70,6 @@ public class Stopwords {
 
 	public static void main(String[] args){
 
-		Stemmer stemmer = new Stemmer();
 		stopwordlist = read();
 		
 		populateHashSet();

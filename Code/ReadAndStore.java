@@ -27,7 +27,7 @@ public class ReadAndStore{
                int ts = get_ts(read.get("created_at"));
                count ++;
 
-               String path = "processed_tweets/" + String.valueOf(ts) + ".json";
+               String path = "cleaned_tweets/" + String.valueOf(ts) + ".json";
                System.out.println(path);
                FileWriter fw = new FileWriter(path ,true); //the true will append the new data
                fw.write(write.toString());//appends the string to the file
