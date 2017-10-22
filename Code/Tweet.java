@@ -10,32 +10,6 @@ public class Tweet{
 	public Long id;
 	public int timestamp;
 	public String[] tokens;
-	public ArrayList<Kwp> kwps = new ArrayList<Kwp>();
-
-	public void setContent(String content){
-		this.content = content;
-		this.populateTokens(content);
-	}
-
-	public String getContent(){
-		return this.content;
-	}
-
-	public void setId(Long id){
-		this.id = id;
-	}
-
-	public Long getId(){
-		return this.id;
-	}
-
-	public void setTimeStamp(int timestamp){
-		this.timestamp = timestamp;
-	}
-
-	public int getTimeStamp(){
-		return this.timestamp;
-	}
 
 	public String toString(){
 		String ret = "";
@@ -46,14 +20,15 @@ public class Tweet{
 		return ret + " : " + String.valueOf(this.timestamp);
 	}
 
-	public void populateTokens(String content){
-		StringTokenizer token = new StringTokenizer(content);
+	public void populateTokens(){
+		StringTokenizer token = new StringTokenizer(this.content);
 		Set<String> temp = new HashSet<String>();
-		tokens = new String[token.countTokens()];
 		int i = 0;
         while (token.hasMoreTokens()){
             temp.add(token.nextToken());
         }
+
+        tokens = new String[temp.size()];
 
         for(String s: temp){
         	tokens[i] = s;

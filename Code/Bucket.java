@@ -1,6 +1,12 @@
 import java.util.*;
 
 public class Bucket{
-	public Set<String> keywords = new HashSet<String>();
-	public Set<String> content = new HashSet<String>();
+
+	public Set<Kwp> keywordpairs = new HashSet<Kwp>();
+	public Set<String> mixed_content = new HashSet<String>();
+
+	public String toString(){
+		return keywordpairs.toString();
+	}
+
 }

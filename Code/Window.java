@@ -1,6 +1,7 @@
 import java.util.*;
 
 public class Window{
-	public ArrayList<Kwp> keywordpairs = new ArrayList<Kwp>();
+	public Set<Kwp> keywordpairs = new HashSet<Kwp>();
+	public ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 	public ArrayList<Bucket> buckets = new ArrayList<Bucket>();
 }
