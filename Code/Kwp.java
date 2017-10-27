@@ -42,6 +42,6 @@ public class Kwp{
 	}
 
 	public int hashCode(){
-		return 37*kw1.hashCode() + kw2.hashCode();
+		return kw1.hashCode() + kw2.hashCode();
 	}
 }
