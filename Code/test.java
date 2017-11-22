@@ -115,39 +115,39 @@ public class test{
 	// System.out.println(test.contains(temp2));
    		
    		/////////////////////////////////////////////////////////////////////////////////////////////////////////
-   		int prev_ts = 1, curr_ts = 2;
-   		Window prev = new Window();
-   		prev.tweets = Preprocess.readfile(prev_ts);
-   		// System.out.println(first.tweets);
-   		ArrayList<Kwp> temp1 = new ArrayList<Kwp>();
-   		for(int i = 0; i < prev.tweets.size(); i ++){
-   			ArrayList<Kwp> temp = Preprocess.generatekwps_new(prev.tweets.get(i));
-   			temp1.addAll(temp);
-   			// System.out.println(first.tweets.get(i));
-   		}
-   		prev.keywordpairs.addAll(temp1);
-   		// System.out.println(first.keywordpairs);
-   		prev.buckets = Bucketize.bucketize_new(prev.keywordpairs);
-   		// System.out.println(first.buckets);
+   		// int prev_ts = 1, curr_ts = 2;
+   		// Window prev = new Window();
+   		// prev.tweets = Preprocess.readfile(prev_ts);
+   		// // System.out.println(first.tweets);
+   		// ArrayList<Kwp> temp1 = new ArrayList<Kwp>();
+   		// for(int i = 0; i < prev.tweets.size(); i ++){
+   		// 	ArrayList<Kwp> temp = Preprocess.generatekwps_new(prev.tweets.get(i));
+   		// 	temp1.addAll(temp);
+   		// 	// System.out.println(first.tweets.get(i));
+   		// }
+   		// prev.keywordpairs.addAll(temp1);
+   		// // System.out.println(first.keywordpairs);
+   		// prev.buckets = Bucketize.bucketize_new(prev.keywordpairs);
+   		// // System.out.println(first.buckets);
 
-   		Window curr = new Window();
-   		curr.tweets = Preprocess.readfile(curr_ts);
-   		temp1 = new ArrayList<Kwp>();
-   		for(int i = 0; i < curr.tweets.size(); i++){
-   			ArrayList<Kwp> temp = Preprocess.generatekwps(prev, curr, curr.tweets.get(i));
-   			temp1.addAll(temp);
-   		}
-   		curr.keywordpairs.addAll(temp1);
-   		curr.buckets = Bucketize.bucketize(prev, curr.keywordpairs);
+   		// Window curr = new Window();
+   		// curr.tweets = Preprocess.readfile(curr_ts);
+   		// temp1 = new ArrayList<Kwp>();
+   		// for(int i = 0; i < curr.tweets.size(); i++){
+   		// 	ArrayList<Kwp> temp = Preprocess.generatekwps(prev, curr, curr.tweets.get(i));
+   		// 	temp1.addAll(temp);
+   		// }
+   		// curr.keywordpairs.addAll(temp1);
+   		// curr.buckets = Bucketize.bucketize(prev, curr.keywordpairs);
 
-   		prev.buckets = Consolidation.intrawindow_consolidate(prev);
-   		curr.buckets = Consolidation.intrawindow_consolidate(curr);
-   		curr.buckets = Consolidation.consolidate(curr, prev);
+   		// prev.buckets = Consolidation.intrawindow_consolidate(prev);
+   		// // curr.buckets = Consolidation.intrawindow_consolidate(curr);
+   		// curr.buckets = Consolidation.consolidate(curr, prev);
 
-   		System.out.println(prev.buckets);
-   		System.out.println(prev.buckets.size());
-   		System.out.println(curr.buckets);
-   		System.out.println(curr.buckets.size());
+   		// System.out.println(prev.buckets);
+   		// System.out.println(prev.buckets.size());
+   		// System.out.println(curr.buckets);
+   		// System.out.println(curr.buckets.size());
    		////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  		Bucket temp1 = new Bucket();
   //  		Bucket temp2 = new Bucket();
@@ -179,5 +179,69 @@ public class test{
   //  		System.out.println(test.contains(temp2));
    		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+   		int prev_window_num = 1, curr_window_num = 2;
+   		Set<Kwp> temp2;
+
+   		Window prev = new Window();
+   		prev.tweets = Preprocess.readfile(prev_window_num);
+   		Set<Kwp> temp1 = new HashSet<Kwp>();
+   		for(int i = 0; i < prev.tweets.size(); i ++){
+   			ArrayList<Kwp> temp = Preprocess.generatekwps_new(prev.tweets.get(i));
+   			temp1.addAll(temp);
+   		}
+   		prev.keywordpairs.addAll(temp1);
+   		prev.buckets = Bucketize.bucketize_new(prev.keywordpairs);
+
+   		Window curr = new Window();
+   		curr.tweets = Preprocess.readfile(curr_window_num);
+   		temp1 = new HashSet<Kwp>();
+   		for(int i = 0; i < curr.tweets.size(); i++){
+   			ArrayList<Kwp> temp = Preprocess.generatekwps(prev, curr, curr.tweets.get(i));
+   			temp1.addAll(temp);
+   		}
+   		curr.keywordpairs.addAll(temp1);
+   		curr.buckets = Bucketize.bucketize(prev, curr.keywordpairs);
+   		curr.buckets = Consolidation.consolidate(curr, prev);
+
+   		curr_window_num += 1;
+   		prev_window_num += 1;
+   		while(curr_window_num < 22){
+   			prev = curr;
+   			
+   			curr = new Window();
+   			curr.tweets = Preprocess.readfile(curr_window_num);
+   			temp1 = new HashSet<Kwp>();
+   			temp2 = new HashSet<Kwp>();
+   			for(int i = 0; i < curr.tweets.size(); i++){
+   				ArrayList<Kwp> temp = Preprocess.generatekwps(prev, curr, curr.tweets.get(i));
+   				for(Kwp kwp1 : temp){
+   					if(temp1.contains(kwp1)){
+   						for(Kwp kwp2 : temp1){
+   							if(kwp1.hashCode() == kwp2.hashCode()){
+   								kwp2.curr_tweets.add(curr.tweets.get(i));
+   							}
+   						}
+   					}else{
+   						temp1.add(kwp1);
+   					}
+   				}
+   				// temp1.addAll(temp);
+   			}
+   			for(Kwp kwp : temp1){
+   				if(kwp.prev_tweets.size() < kwp.curr_tweets.size()){
+   					temp2.add(kwp);
+   				}
+   			}
+   			curr.keywordpairs.addAll(temp2);
+   			curr.buckets = Bucketize.bucketize(prev, curr.keywordpairs);
+   			curr.buckets = Consolidation.consolidate(curr, prev);
+
+   			System.out.println(curr.buckets);
+   			System.out.println(curr.buckets.size());
+
+   			curr_window_num += 1;
+   			prev_window_num += 1;
+   		}
 	}
 }

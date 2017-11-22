@@ -69,31 +69,37 @@ public class Preprocess{
 
 	public static ArrayList<Tweet> readfile(int window_num){
 
-		String address = address_start + String.valueOf(window_num) + address_end;
 		ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 		Stopwords.stopwordlist = Stopwords.read();
 		Stopwords.populateHashSet();
+		int i = 0;
 
-		try (BufferedReader br = new BufferedReader(new FileReader(address))){
-        	String line;
-        	while ((line = br.readLine()) != null){
+		while(window_num + i < 28 && i < 6){
+			String address = address_start + String.valueOf(window_num + i) + address_end;
+			try (BufferedReader br = new BufferedReader(new FileReader(address))){
+	        	String line;
+    	    	while ((line = br.readLine()) != null){
 
-        		JSONParser parser = new JSONParser();
-        		Object object = parser.parse(line);
-   			   	JSONObject read = (JSONObject)object;
+        			JSONParser parser = new JSONParser();
+        			Object object = parser.parse(line);
+   			   		JSONObject read = (JSONObject)object;
 
-   			   	Tweet temp = new Tweet();
-   			   	String unclean = read.get("content").toString();
-   			   	temp.content = Stopwords.removeStopWords(unclean);
-   			   	temp.populateTokens();
-   			   	temp.id = Long.parseLong(read.get("id").toString());
-   			   	temp.timestamp = window_num;
-   			   	tweets.add(temp);
-   		 	}
-        }catch(Exception e){
-        	e.printStackTrace();
-        }
+	   			   	Tweet temp = new Tweet();
+   				   	String unclean = read.get("content").toString();
+   				   	temp.content = Stopwords.removeStopWords(unclean);
+   				   	temp.content = temp.content.toLowerCase();
+   				   	temp.populateTokens();
+   			   		temp.id = Long.parseLong(read.get("id").toString());
+	   			   	temp.timestamp = window_num;
+   				   	tweets.add(temp);
+   			 	}
+        	}catch(Exception e){
+        		e.printStackTrace();
+        	}
 
+        	i ++;
+		}
+		
         return tweets;
 	}
 

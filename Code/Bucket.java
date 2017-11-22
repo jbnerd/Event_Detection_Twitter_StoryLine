@@ -6,7 +6,8 @@ public class Bucket{
 	public Set<String> mixed_content = new HashSet<String>();
 
 	public String toString(){
-		return keywordpairs.toString() + ":\n" + mixed_content.toString() + "\n";
+		// keywordpairs.toString() + ":\n" + 
+		return mixed_content.toString() + "\n";
 	}
 
 	public int hashCode(){

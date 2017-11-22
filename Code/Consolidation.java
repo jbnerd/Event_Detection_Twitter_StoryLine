@@ -21,7 +21,7 @@ public class Consolidation{
 				union.addAll(bucket1.mixed_content);
 				float jaccard = (float)intersection.size()/union.size();
 
-				if(jaccard >= 0.25){
+				if(jaccard >= 0.75){
 					temp.keywordpairs.addAll(bucket1.keywordpairs);
 					temp.mixed_content.addAll(bucket1.mixed_content);
 					// System.out.println(jaccard);
@@ -48,7 +48,7 @@ public class Consolidation{
 				union.addAll(bucket1.mixed_content);
 				float jaccard = (float)intersection.size()/union.size();
 				
-				if(jaccard >= 0.25){
+				if(jaccard >= 0.75){
 					temp.keywordpairs.addAll(bucket1.keywordpairs);
 					temp.mixed_content.addAll(bucket1.mixed_content);
 					// System.out.println(jaccard);
