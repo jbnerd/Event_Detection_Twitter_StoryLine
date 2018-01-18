@@ -7,7 +7,7 @@ import java.lang.Math.*;
 
 public class Preprocess{
 
-	private static String address_start = "cleaned_tweets/";
+	private static String address_start = "final_cleaned_tweets/";
 	private static String address_end = ".json";
 
 	public static void main(String args[]){
@@ -74,7 +74,7 @@ public class Preprocess{
 		Stopwords.populateHashSet();
 		int i = 0;
 
-		while(window_num + i < 28 && i < 6){
+		while(window_num + i < 29 && i < 6){
 			String address = address_start + String.valueOf(window_num + i) + address_end;
 			try (BufferedReader br = new BufferedReader(new FileReader(address))){
 	        	String line;

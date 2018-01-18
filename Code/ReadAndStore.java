@@ -33,8 +33,6 @@ public class ReadAndStore{
                fw.write(write.toString());//appends the string to the file
                fw.write("\n");
                fw.close();
-
-
                // System.out.println(write);
             }catch(Exception e){
    			   e.printStackTrace();

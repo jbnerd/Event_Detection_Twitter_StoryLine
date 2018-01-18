@@ -184,37 +184,75 @@ public class test{
    		Set<Kwp> temp2;
 
    		Window prev = new Window();
+   		// System.out.println("Prev Initializing started.");
    		prev.tweets = Preprocess.readfile(prev_window_num);
+   		// System.out.println("Prev window populated");
    		Set<Kwp> temp1 = new HashSet<Kwp>();
    		for(int i = 0; i < prev.tweets.size(); i ++){
    			ArrayList<Kwp> temp = Preprocess.generatekwps_new(prev.tweets.get(i));
    			temp1.addAll(temp);
    		}
+   		// System.out.println("Prev keywordpairs generated : " + temp1.size());
    		prev.keywordpairs.addAll(temp1);
+   		// System.out.println("Prev Bucketizing started");
    		prev.buckets = Bucketize.bucketize_new(prev.keywordpairs);
+   		// System.out.println("Prev Bucketizing complete");
 
    		Window curr = new Window();
+   		// System.out.println("Curr Initializing started.");
    		curr.tweets = Preprocess.readfile(curr_window_num);
+   		// System.out.println("Curr window populated");
    		temp1 = new HashSet<Kwp>();
    		for(int i = 0; i < curr.tweets.size(); i++){
    			ArrayList<Kwp> temp = Preprocess.generatekwps(prev, curr, curr.tweets.get(i));
    			temp1.addAll(temp);
    		}
+   		// System.out.println("Curr keywordpairs generated");
    		curr.keywordpairs.addAll(temp1);
+   		// System.out.println("Curr Bucketizing started");
    		curr.buckets = Bucketize.bucketize(prev, curr.keywordpairs);
+   		// System.out.println("Curr Bucketizing complete");
+   		// System.out.println("First Consolidation begins");
    		curr.buckets = Consolidation.consolidate(curr, prev);
+   		// System.out.println("First Consolidation complete");
+		int num_events = curr.buckets.size();
+		int new_size, j = 1;
+   		while(true){
+   			curr.buckets = Consolidation.intrawindow_consolidate(curr);
+   			// System.out.println("intrawindow_consolidation done" + j);
+   			new_size = curr.buckets.size();
+   			if(new_size <= num_events){
+   				break;
+   			}
+   			num_events = new_size;
+   		}
+
+  //  		try{
+  //  			PrintWriter writer = new PrintWriter("./results/"+ Integer.toString(curr_window_num) + ".txt", "UTF-8");
+		// 	writer.println(curr.buckets);
+		// 	writer.println(curr.buckets.size());
+		// 	writer.close();
+		// }catch(Exception e){
+		// 	e.printStackTrace();
+		// }
+
+   		System.out.println(curr.buckets);
+   		System.out.println(curr.buckets.size());
 
    		curr_window_num += 1;
    		prev_window_num += 1;
-   		while(curr_window_num < 22){
+   		while(curr_window_num < 23){
    			prev = curr;
    			
    			curr = new Window();
+   			// System.out.println(curr_window_num + "th Window begins");
    			curr.tweets = Preprocess.readfile(curr_window_num);
+   			// System.out.println(curr_window_num + "th Window read");
    			temp1 = new HashSet<Kwp>();
    			temp2 = new HashSet<Kwp>();
    			for(int i = 0; i < curr.tweets.size(); i++){
    				ArrayList<Kwp> temp = Preprocess.generatekwps(prev, curr, curr.tweets.get(i));
+   				// System.out.println(curr_window_num + "th Window keywordpairs generated");
    				for(Kwp kwp1 : temp){
    					if(temp1.contains(kwp1)){
    						for(Kwp kwp2 : temp1){
@@ -234,8 +272,32 @@ public class test{
    				}
    			}
    			curr.keywordpairs.addAll(temp2);
+   			// System.out.println(curr_window_num + "th Window Bucketizing begins");
    			curr.buckets = Bucketize.bucketize(prev, curr.keywordpairs);
+   			// System.out.println(curr_window_num + "th Window Bucketizing complete");
+   			// System.out.println(curr_window_num + "th Window Consolidation begins");
    			curr.buckets = Consolidation.consolidate(curr, prev);
+   			// System.out.println(curr_window_num + "th Window Consolidation complete");
+
+   			num_events = curr.buckets.size(); j = 1;
+   			while(true){
+   				curr.buckets = Consolidation.intrawindow_consolidate(curr);
+   				// System.out.println("intrawindow_consolidation done" + j);
+   				new_size = curr.buckets.size();
+   				if(new_size <= num_events){
+   					break;
+   				}
+   				num_events = new_size;
+   			}
+
+			// try{
+   // 				PrintWriter writer = new PrintWriter("./results/"+ Integer.toString(curr_window_num) + ".txt", "UTF-8");
+			// 	writer.println(curr.buckets);
+			// 	writer.println(curr.buckets.size());
+			// 	writer.close();
+			// }catch(Exception e){
+			// 	e.printStackTrace();
+			// }
 
    			System.out.println(curr.buckets);
    			System.out.println(curr.buckets.size());
